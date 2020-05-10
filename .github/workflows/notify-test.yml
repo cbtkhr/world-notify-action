@@ -1,0 +1,17 @@
+name: notify-test
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: ./
+        with:
+          worldToken: ${{ secrets.WORLD_TOKEN }}
+          participationId: 4446
+          content: |
+            world-notify-action リリース

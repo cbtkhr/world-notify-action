@@ -1,10 +1,16 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: World Notify
+description: World Notify
+author: aki77
 inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+  worldToken:
+    description: "World token"
+    required: true
+  participationId:
+    description: "Participation id"
+    required: true
+  content:
+    description: "Comment content"
+    required: true
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: "node12"
+  main: "dist/index.js"

@@ -1,16 +1,24 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import got from 'got'
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`)
+    const worldToken = core.getInput('worldToken', {required: true})
+    const participationId = core.getInput('participationId', {required: true})
+    const content = core.getInput('content', {required: true})
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
+    await got.post(
+      `https://www.sonicgarden.world/api/v1/rooms/participations/${participationId}/comments.json`,
+      {
+        json: {
+          comment: {content}
+        },
+        headers: {
+          Authorization: `Bearer ${worldToken}`
+        },
+        responseType: 'json'
+      }
+    )
   } catch (error) {
     core.setFailed(error.message)
   }
