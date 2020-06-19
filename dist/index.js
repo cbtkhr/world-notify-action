@@ -2197,15 +2197,12 @@ const got_1 = __importDefault(__webpack_require__(77));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const worldToken = core.getInput('worldToken', { required: true });
+            const token = core.getInput('token', { required: true });
             const participationId = core.getInput('participationId', { required: true });
             const content = core.getInput('content', { required: true });
-            yield got_1.default.post(`https://www.sonicgarden.world/api/v1/rooms/participations/${participationId}/comments.json`, {
+            yield got_1.default.post(`https://www.sonicgarden.world/room_api/v1/rooms/participations/${participationId}/comments?token=${token}`, {
                 json: {
                     comment: { content }
-                },
-                headers: {
-                    Authorization: `Bearer ${worldToken}`
                 },
                 responseType: 'json'
             });
