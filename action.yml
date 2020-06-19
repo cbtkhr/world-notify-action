@@ -2,7 +2,7 @@ name: World Notify
 description: World Notify
 author: aki77
 inputs:
-  worldToken:
+  token:
     description: "World token"
     required: true
   participationId:
