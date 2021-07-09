@@ -12,6 +12,6 @@ jobs:
       - uses: ./
         with:
           token: ${{ secrets.WORLD_NOTIFY_APP_TOKEN }}
-          participationId: 4446
+          participationId: 4446,4446
           content: |
             world-notify-action リリース
