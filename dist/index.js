@@ -542,6 +542,10 @@ const normalizeUrl = (urlString, options) => {
 		}
 	}
 
+	if (options.removeQueryParameters === true) {
+		urlObj.search = '';
+	}
+
 	// Sort query parameters
 	if (options.sortQueryParameters) {
 		urlObj.searchParams.sort();
@@ -2268,14 +2272,18 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const token = core.getInput('token', { required: true });
-            const participationId = core.getInput('participationId', { required: true });
+            const participationIds = core
+                .getInput('participationId', { required: true })
+                .split(',')
+                .map(id => id.trim());
             const content = core.getInput('content', { required: true });
-            yield got_1.default.post(`https://www.sonicgarden.world/room_api/v1/rooms/participations/${participationId}/comments?token=${token}`, {
+            const requests = participationIds.map(participationId => got_1.default.post(`https://www.sonicgarden.world/room_api/v1/rooms/participations/${participationId}/comments?token=${token}`, {
                 json: {
                     comment: { content }
                 },
                 responseType: 'json'
-            });
+            }));
+            yield Promise.all(requests);
         }
         catch (error) {
             core.setFailed(error.message);

@@ -19,7 +19,7 @@ jobs:
       - uses: SonicGarden/world-notify-action@v1
         with:
           token: ${{ secrets.WORLD_NOTIFY_APP_TOKEN }}
-          participationId: xxx
+          participationId: xxx,yyy
           content: |
             @here xxx リリース
 ```
