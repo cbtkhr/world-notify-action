@@ -28,8 +28,8 @@ async function run(): Promise<void> {
         }
       )
     )
-    requests.concat(
-      groupIds.map(groupId =>
+    requests.push(
+      ...groupIds.map(groupId =>
         got.post(
           `https://www.sonicgarden.world/room_api/v1/groups/${groupId}/entries.json?token=${token}`,
           {

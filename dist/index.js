@@ -2290,7 +2290,7 @@ function run() {
                 },
                 responseType: 'json'
             }));
-            requests.concat(groupIds.map(groupId => got_1.default.post(`https://www.sonicgarden.world/room_api/v1/groups/${groupId}/entries.json?token=${token}`, {
+            requests.push(...groupIds.map(groupId => got_1.default.post(`https://www.sonicgarden.world/room_api/v1/groups/${groupId}/entries.json?token=${token}`, {
                 json: {
                     entry: {
                         content: { content }
