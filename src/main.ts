@@ -34,7 +34,9 @@ async function run(): Promise<void> {
           `https://www.sonicgarden.world/room_api/v1/groups/${groupId}/entries.json?token=${token}`,
           {
             json: {
-              content: {content}
+              entry: {
+                content: {content}
+              }
             },
             responseType: 'json'
           }
