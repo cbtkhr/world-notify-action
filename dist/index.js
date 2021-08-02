@@ -2273,9 +2273,16 @@ function run() {
         try {
             const token = core.getInput('token', { required: true });
             const participationIds = core
-                .getInput('participationId', { required: true })
+                .getInput('participationId')
                 .split(',')
                 .map(id => id.trim());
+            const groupIds = core
+                .getInput('groupId')
+                .split(',')
+                .map(id => id.trim());
+            if (!participationIds.length && !groupIds.length) {
+                throw new Error(`participationId or groupId must be set`);
+            }
             const content = core.getInput('content', { required: true });
             const requests = participationIds.map(participationId => got_1.default.post(`https://www.sonicgarden.world/room_api/v1/rooms/participations/${participationId}/comments?token=${token}`, {
                 json: {
@@ -2283,6 +2290,12 @@ function run() {
                 },
                 responseType: 'json'
             }));
+            requests.concat(groupIds.map(groupId => got_1.default.post(`https://www.sonicgarden.world/room_api/v1/groups/${groupId}/entries.json?token=${token}`, {
+                json: {
+                    content: { content }
+                },
+                responseType: 'json'
+            })));
             yield Promise.all(requests);
         }
         catch (error) {
