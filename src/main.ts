@@ -44,7 +44,10 @@ async function run(): Promise<void> {
       )
     )
 
-    await Promise.all(requests)
+    const responses = await Promise.all(requests)
+    for (const response of responses) {
+      core.info(JSON.stringify(response))
+    }
   } catch (error) {
     core.setFailed(error.message)
   }

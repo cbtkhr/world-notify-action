@@ -2298,7 +2298,10 @@ function run() {
                 },
                 responseType: 'json'
             })));
-            yield Promise.all(requests);
+            const responses = yield Promise.all(requests);
+            for (const response of responses) {
+                core.info(JSON.stringify(response));
+            }
         }
         catch (error) {
             core.setFailed(error.message);
