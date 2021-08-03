@@ -2293,7 +2293,7 @@ function run() {
             requests.push(...groupIds.map(groupId => got_1.default.post(`https://www.sonicgarden.world/room_api/v1/groups/${groupId}/entries.json?token=${token}`, {
                 form: {
                     entry: {
-                        content: { content }
+                        content
                     }
                 }
             })));
@@ -2303,6 +2303,7 @@ function run() {
             }
         }
         catch (error) {
+            core.info(JSON.stringify(error));
             core.setFailed(error.message);
         }
     });

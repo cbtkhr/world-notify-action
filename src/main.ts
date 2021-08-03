@@ -35,7 +35,7 @@ async function run(): Promise<void> {
           {
             form: {
               entry: {
-                content: {content}
+                content
               }
             }
           }
@@ -48,6 +48,7 @@ async function run(): Promise<void> {
       core.info(JSON.stringify(response.body))
     }
   } catch (error) {
+    core.info(JSON.stringify(error))
     core.setFailed(error.message)
   }
 }
