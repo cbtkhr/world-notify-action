@@ -33,12 +33,11 @@ async function run(): Promise<void> {
         got.post(
           `https://www.sonicgarden.world/room_api/v1/groups/${groupId}/entries.json?token=${token}`,
           {
-            json: {
+            form: {
               entry: {
                 content: {content}
               }
-            },
-            responseType: 'json'
+            }
           }
         )
       )

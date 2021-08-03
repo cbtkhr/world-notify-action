@@ -2291,12 +2291,11 @@ function run() {
                 responseType: 'json'
             }));
             requests.push(...groupIds.map(groupId => got_1.default.post(`https://www.sonicgarden.world/room_api/v1/groups/${groupId}/entries.json?token=${token}`, {
-                json: {
+                form: {
                     entry: {
                         content: { content }
                     }
-                },
-                responseType: 'json'
+                }
             })));
             const responses = yield Promise.all(requests);
             for (const response of responses) {
