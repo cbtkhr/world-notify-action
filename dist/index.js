@@ -2292,18 +2292,12 @@ function run() {
             }));
             requests.push(...groupIds.map(groupId => got_1.default.post(`https://www.sonicgarden.world/room_api/v1/groups/${groupId}/entries.json?token=${token}`, {
                 form: {
-                    entry: {
-                        content
-                    }
+                    'entry[content]': content
                 }
             })));
-            const responses = yield Promise.all(requests);
-            for (const response of responses) {
-                core.info(JSON.stringify(response.body));
-            }
+            yield Promise.all(requests);
         }
         catch (error) {
-            core.info(JSON.stringify(error));
             core.setFailed(error.message);
         }
     });

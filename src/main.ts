@@ -34,21 +34,15 @@ async function run(): Promise<void> {
           `https://www.sonicgarden.world/room_api/v1/groups/${groupId}/entries.json?token=${token}`,
           {
             form: {
-              entry: {
-                content
-              }
+              'entry[content]': content
             }
           }
         )
       )
     )
 
-    const responses = await Promise.all(requests)
-    for (const response of responses) {
-      core.info(JSON.stringify(response.body))
-    }
+    await Promise.all(requests)
   } catch (error) {
-    core.info(JSON.stringify(error))
     core.setFailed(error.message)
   }
 }
