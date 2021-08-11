@@ -1,6 +1,10 @@
 import * as core from '@actions/core'
 import got from 'got'
 
+function splitIds(ids: string): string[] {
+  return ids.split(',').map(id => id.trim())
+}
+
 async function run(): Promise<void> {
   try {
     const token = core.getInput('token', {required: true})
@@ -10,16 +14,19 @@ async function run(): Promise<void> {
     if (!participationIdInput && !groupIdInput) {
       throw new Error(`participationId or groupId must be set`)
     }
-    const participationIds = participationIdInput
-      .split(',')
-      .map(id => id.trim())
-    const groupIds = groupIdInput.split(',').map(id => id.trim())
+    const participationIds = splitIds(participationIdInput)
+    const groupIds = splitIds(groupIdInput)
 
     const content = core.getInput('content', {required: true})
 
-    const requests = participationIds.map(participationId =>
+    const apiUrlBase = 'https://www.sonicgarden.world/room_api/v1'
+
+    const participationRequests = participationIds.map(participationId =>
       got.post(
-        `https://www.sonicgarden.world/room_api/v1/rooms/participations/${participationId}/comments?token=${token}`,
+        new URL(
+          `/rooms/participations/${participationId}/comments?token=${token}`,
+          apiUrlBase
+        ),
         {
           json: {
             comment: {content}
@@ -28,20 +35,18 @@ async function run(): Promise<void> {
         }
       )
     )
-    requests.push(
-      ...groupIds.map(groupId =>
-        got.post(
-          `https://www.sonicgarden.world/room_api/v1/groups/${groupId}/entries.json?token=${token}`,
-          {
-            form: {
-              'entry[content]': content
-            }
+    const groupRequests = groupIds.map(groupId =>
+      got.post(
+        new URL(`/groups/${groupId}/entries.json?token=${token}`, apiUrlBase),
+        {
+          form: {
+            'entry[content]': content
           }
-        )
+        }
       )
     )
 
-    await Promise.all(requests)
+    await Promise.all([...participationRequests, ...groupRequests])
   } catch (error) {
     core.setFailed(error.message)
   }
