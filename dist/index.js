@@ -2284,16 +2284,17 @@ function run() {
             const groupIds = splitIds(groupIdInput);
             const content = core.getInput('content', { required: true });
             const apiUrlBase = 'https://www.sonicgarden.world/room_api/v1';
-            const participationRequests = participationIds.map(participationId => got_1.default.post(new URL(`/rooms/participations/${participationId}/comments?token=${token}`, apiUrlBase), {
+            const participationRequests = participationIds.map(participationId => got_1.default.post(`${apiUrlBase}/rooms/participations/${participationId}/comments?token=${token}`, {
                 json: {
                     comment: { content }
                 },
                 responseType: 'json'
             }));
-            const groupRequests = groupIds.map(groupId => got_1.default.post(new URL(`/groups/${groupId}/entries.json?token=${token}`, apiUrlBase), {
-                form: {
-                    'entry[content]': content
-                }
+            const groupRequests = groupIds.map(groupId => got_1.default.post(`${apiUrlBase}/groups/${groupId}/entries?token=${token}`, {
+                json: {
+                    entry: { content }
+                },
+                responseType: 'json'
             }));
             yield Promise.all([...participationRequests, ...groupRequests]);
         }

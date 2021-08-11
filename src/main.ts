@@ -23,10 +23,7 @@ async function run(): Promise<void> {
 
     const participationRequests = participationIds.map(participationId =>
       got.post(
-        new URL(
-          `/rooms/participations/${participationId}/comments?token=${token}`,
-          apiUrlBase
-        ),
+        `${apiUrlBase}/rooms/participations/${participationId}/comments?token=${token}`,
         {
           json: {
             comment: {content}
@@ -36,14 +33,12 @@ async function run(): Promise<void> {
       )
     )
     const groupRequests = groupIds.map(groupId =>
-      got.post(
-        new URL(`/groups/${groupId}/entries.json?token=${token}`, apiUrlBase),
-        {
-          form: {
-            'entry[content]': content
-          }
-        }
-      )
+      got.post(`${apiUrlBase}/groups/${groupId}/entries?token=${token}`, {
+        json: {
+          entry: {content}
+        },
+        responseType: 'json'
+      })
     )
 
     await Promise.all([...participationRequests, ...groupRequests])
