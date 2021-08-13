@@ -2268,6 +2268,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const got_1 = __importDefault(__webpack_require__(77));
+function splitIds(ids) {
+    return ids.split(',').map(id => id.trim());
+}
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -2277,23 +2280,23 @@ function run() {
             if (!participationIdInput && !groupIdInput) {
                 throw new Error(`participationId or groupId must be set`);
             }
-            const participationIds = participationIdInput
-                .split(',')
-                .map(id => id.trim());
-            const groupIds = groupIdInput.split(',').map(id => id.trim());
+            const participationIds = splitIds(participationIdInput);
+            const groupIds = splitIds(groupIdInput);
             const content = core.getInput('content', { required: true });
-            const requests = participationIds.map(participationId => got_1.default.post(`https://www.sonicgarden.world/room_api/v1/rooms/participations/${participationId}/comments?token=${token}`, {
+            const apiUrlBase = 'https://www.sonicgarden.world/room_api/v1';
+            const participationRequests = participationIds.map(participationId => got_1.default.post(`${apiUrlBase}/rooms/participations/${participationId}/comments?token=${token}`, {
                 json: {
                     comment: { content }
                 },
                 responseType: 'json'
             }));
-            requests.push(...groupIds.map(groupId => got_1.default.post(`https://www.sonicgarden.world/room_api/v1/groups/${groupId}/entries.json?token=${token}`, {
-                form: {
-                    'entry[content]': content
-                }
-            })));
-            yield Promise.all(requests);
+            const groupRequests = groupIds.map(groupId => got_1.default.post(`${apiUrlBase}/groups/${groupId}/entries?token=${token}`, {
+                json: {
+                    entry: { content }
+                },
+                responseType: 'json'
+            }));
+            yield Promise.all([...participationRequests, ...groupRequests]);
         }
         catch (error) {
             core.setFailed(error.message);
