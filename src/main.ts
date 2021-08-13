@@ -12,18 +12,18 @@ async function run(): Promise<void> {
     const participationIdInput = core.getInput('participationId')
     const groupIdInput = core.getInput('groupId')
     if (!participationIdInput && !groupIdInput) {
-      throw new Error(`participationId or groupId must be set`)
+      throw new Error('participationId or groupId must be set')
     }
     const participationIds = splitIds(participationIdInput)
     const groupIds = splitIds(groupIdInput)
 
     const content = core.getInput('content', {required: true})
 
-    const apiUrlBase = 'https://www.sonicgarden.world/room_api/v1'
+    const API_URL_BASE = 'https://www.sonicgarden.world/room_api/v1'
 
     const participationRequests = participationIds.map(participationId =>
       got.post(
-        `${apiUrlBase}/rooms/participations/${participationId}/comments?token=${token}`,
+        `${API_URL_BASE}/rooms/participations/${participationId}/comments?token=${token}`,
         {
           json: {
             comment: {content}
@@ -33,7 +33,7 @@ async function run(): Promise<void> {
       )
     )
     const groupRequests = groupIds.map(groupId =>
-      got.post(`${apiUrlBase}/groups/${groupId}/entries?token=${token}`, {
+      got.post(`${API_URL_BASE}/groups/${groupId}/entries?token=${token}`, {
         json: {
           entry: {content}
         },
